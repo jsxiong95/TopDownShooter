@@ -241,6 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RockPrefab: {fileID: 4309966094598302796, guid: be0f46a9032eae448ad2da5d2743cbc1, type: 3}
   rb: {fileID: 773065926}
+  cam: {fileID: 519420031}
   moveSpeed: 500
   velocityDampening: 0.96
 --- !u!212 &773065924

@@ -12,6 +12,10 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 playerMove;
 
+    Vector2 mousePos;
+
+    public Camera cam;
+
     [Header("Designer Variables")]
     [SerializeField] public float moveSpeed = 500f;
     [SerializeField] public float velocityDampening = .99f;
@@ -26,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
         print("Print Statement");
         Debug.Log("Debug.log");
         Debug.LogWarning("Debug.logWarning");
-        Debug.LogError("Debug.LogError");
+        //Debug.LogError("Debug.LogError");
     }
 
     // Update is called once per frame
@@ -35,10 +39,13 @@ public class PlayerMovement : MonoBehaviour
         //playerMove.x = Input.GetAxisRaw("Horizontal");
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
             inputVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            //mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         } else {
             inputVector = Vector2.zero;
         }
-        
+
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
 
         if (Input.GetButtonDown("Fire1")) {
             SpawnRock();
@@ -48,6 +55,14 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate() {
         rb.AddForce(inputVector * moveSpeed * Time.deltaTime);
         rb.velocity *= velocityDampening;
+
+        // Other
+        //rb.MovePosition(rb.position + playerMove * moveSpeed * Time.fixedDeltaTime);
+
+        Vector2 lookDir = mousePos - rb.position;
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        rb.rotation = angle;
+
     }
 
     private void SpawnRock() {
