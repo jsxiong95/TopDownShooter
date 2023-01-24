@@ -20,44 +20,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float moveSpeed = 500f;
     [SerializeField] public float velocityDampening = .99f;
 
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        // inefficient way - VERY EXPENSIVE USING GETCOMPONENTS
-        //rb = GetComponent<Rigidbody2D>();
-
-        print("Print Statement");
-        Debug.Log("Debug.log");
-        Debug.LogWarning("Debug.logWarning");
-        //Debug.LogError("Debug.LogError");
-    }
-
     // Update is called once per frame
-    void Update()
-    {
-        //playerMove.x = Input.GetAxisRaw("Horizontal");
+    void Update() {
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
             inputVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            //mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         } else {
             inputVector = Vector2.zero;
         }
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-
-        if (Input.GetButtonDown("Fire1")) {
-            SpawnRock();
-        }
+        
     }
 
+    // Handles the Physics
     private void FixedUpdate() {
         rb.AddForce(inputVector * moveSpeed * Time.deltaTime);
         rb.velocity *= velocityDampening;
-
-        // Other
-        //rb.MovePosition(rb.position + playerMove * moveSpeed * Time.fixedDeltaTime);
 
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
@@ -65,8 +44,16 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void SpawnRock() {
-        Vector2 spawnPosition = new Vector2(Random.Range(-10, 10), 6);
-        Instantiate(RockPrefab, spawnPosition, Quaternion.identity);
+
+    // Deactivates the player if they hit the enemy, AKA lose
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.name == "Enemy(Clone)") {
+            Debug.Log(collision.gameObject.name);
+            gameObject.SetActive(false);
+        }
+
     }
-}
+
+
+
+    }
